@@ -1,0 +1,160 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f1f5f9;
+  text-align: center;
+}
+
+.app {
+  width: 90%;
+  max-width: 700px;
+  margin: 30px auto;
+}
+
+h1 {
+  color: #222;
+  margin-bottom: 20px;
+}
+
+/* STORY SCENE */
+
+.scene {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: linear-gradient(
+    to bottom,
+    #87ceeb 0%,
+    #bde9ff 65%,
+    #79b84a 65%,
+    #4f8f32 100%
+  );
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+/* Sun */
+
+.sky {
+  position: absolute;
+  top: 25px;
+  right: 30px;
+  font-size: 55px;
+}
+
+/* Character */
+
+#character {
+  position: absolute;
+  left: 20px;
+  bottom: 90px;
+  font-size: 75px;
+  z-index: 5;
+
+  animation: characterWalk 5s linear infinite;
+}
+
+/* Character walking */
+
+@keyframes characterWalk {
+
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+
+  20% {
+    transform: translateX(100px) translateY(-8px);
+  }
+
+  40% {
+    transform: translateX(200px) translateY(0);
+  }
+
+  60% {
+    transform: translateX(300px) translateY(-8px);
+  }
+
+  80% {
+    transform: translateX(400px) translateY(0);
+  }
+
+  100% {
+    transform: translateX(500px) translateY(-5px);
+  }
+}
+
+/* Ground */
+
+.ground {
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  width: 100%;
+  font-size: 38px;
+  white-space: nowrap;
+}
+
+/* Scene text */
+
+#sceneTitle {
+  margin-top: 20px;
+  color: #1976d2;
+}
+
+#narration {
+  font-size: 18px;
+  line-height: 1.5;
+  color: #444;
+  min-height: 45px;
+}
+
+/* Play button */
+
+#playBtn {
+  padding: 14px 30px;
+  border: none;
+  border-radius: 12px;
+  background: #1976d2;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+#playBtn:active {
+  transform: scale(0.96);
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+  .scene {
+    height: 320px;
+  }
+
+  #character {
+    font-size: 65px;
+  }
+
+  .ground {
+    font-size: 30px;
+  }
+
+  @keyframes characterWalk {
+
+    0% {
+      transform: translateX(0);
+    }
+
+    50% {
+      transform: translateX(200px) translateY(-8px);
+    }
+
+    100% {
+      transform: translateX(280px);
+    }
+
+  }
+
+}

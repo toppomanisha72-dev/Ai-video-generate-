@@ -11,33 +11,52 @@
 
     <h1>🎬 AI Story Maker</h1>
 
-    <div class="scene">
-      <div class="sky">☀️</div>
-
-      <div id="character">🧍</div>
-
-      <div class="ground">🌳 🌿 🌸 🌿 🌳</div>
-    </div>
-
-    <h2 id="sceneTitle">Scene 1</h2>
-
-    <p id="narration">
-      Ek baar ek chhota sa bachcha jungle mein gaya.
+    <p class="subtitle">
+      Apni story ka idea likho aur animated story banao
     </p>
 
-    <button id="playBtn">▶️ Play Story</button>
-<div id="sceneControls">
-  <div class="action-controls">
+    <textarea
+      id="storyPrompt"
+      placeholder="Example: Ek chhota bachcha jungle mein jaata hai aur ek pyare kutte se milta hai..."
+    ></textarea>
 
-  <button id="walkBtn">🚶 Walk</button>
+    <div class="options">
 
-  <button id="jumpBtn">🦘 Jump</button>
+      <label>
+        🎨 Style
+        <select id="style">
+          <option>Cartoon</option>
+          <option>3D Animation</option>
+          <option>Storybook</option>
+          <option>Anime</option>
+        </select>
+      </label>
 
-  <button id="stopBtn">⏹️ Stop</button>
+      <label>
+        🗣️ Voice
+        <select id="voice">
+          <option>Hindi</option>
+          <option>English</option>
+        </select>
+      </label>
 
-  </div>
-  <button id="nextSceneBtn">➡️ Next Scene</button>
-</div>
+      <label>
+        ⏱️ Duration
+        <select id="duration">
+          <option>30 Seconds</option>
+          <option>1 Minute</option>
+          <option>2 Minutes</option>
+        </select>
+      </label>
+
+    </div>
+
+    <button id="generateBtn">
+      ✨ Generate Story
+    </button>
+
+    <div id="result"></div>
+
   </div>
 
   <script src="script.js"></script>

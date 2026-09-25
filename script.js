@@ -1,10 +1,13 @@
 const playBtn = document.getElementById("playBtn");
 const nextSceneBtn = document.getElementById("nextSceneBtn");
 
+const walkBtn = document.getElementById("walkBtn");
+const jumpBtn = document.getElementById("jumpBtn");
+const stopBtn = document.getElementById("stopBtn");
+
 const character = document.getElementById("character");
 const narration = document.getElementById("narration");
 const sceneTitle = document.getElementById("sceneTitle");
-
 const scene = document.querySelector(".scene");
 
 let currentScene = 0;
@@ -36,28 +39,18 @@ const scenes = [
 ];
 
 function showScene() {
-
   const current = scenes[currentScene];
 
   sceneTitle.textContent = current.title;
   character.textContent = current.character;
   narration.textContent = current.text;
-
   scene.style.background = current.background;
 
-  // Character animation restart
   character.style.animation = "none";
-
-  setTimeout(function () {
-    character.style.animation = "characterWalk 5s linear";
-  }, 50);
 }
 
-
 function speak(text) {
-
   if ("speechSynthesis" in window) {
-
     speechSynthesis.cancel();
 
     const voice = new SpeechSynthesisUtterance(text);
@@ -70,18 +63,16 @@ function speak(text) {
   }
 }
 
-
 playBtn.addEventListener("click", function () {
-
   showScene();
 
-  speak(scenes[currentScene].text);
+  character.style.animation =
+    "characterWalk 5s linear";
 
+  speak(scenes[currentScene].text);
 });
 
-
 nextSceneBtn.addEventListener("click", function () {
-
   currentScene++;
 
   if (currentScene >= scenes.length) {
@@ -89,7 +80,19 @@ nextSceneBtn.addEventListener("click", function () {
   }
 
   showScene();
-
   speak(scenes[currentScene].text);
+});
 
+walkBtn.addEventListener("click", function () {
+  character.style.animation =
+    "characterWalk 5s linear infinite";
+});
+
+jumpBtn.addEventListener("click", function () {
+  character.style.animation =
+    "characterJump 1s ease-in-out";
+});
+
+stopBtn.addEventListener("click", function () {
+  character.style.animation = "none";
 });

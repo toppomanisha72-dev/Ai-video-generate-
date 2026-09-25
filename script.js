@@ -42,6 +42,54 @@ function getBackground(text) {
 }
 
 function createImagePrompt(text) {
+
+  return `
+Children's 3D animated movie scene.
+
+MAIN CHARACTERS:
+A cute 8-year-old Indian boy named Aarav,
+short black hair,
+big expressive brown eyes,
+yellow t-shirt with a small sun symbol,
+blue shorts,
+blue backpack,
+white shoes.
+
+A cute friendly brown-and-white puppy,
+floppy ears,
+small red collar.
+
+IMPORTANT:
+The boy and puppy must look exactly the same
+in every scene of this story.
+
+SCENE:
+${text}
+
+ENVIRONMENT:
+Beautiful colorful village and green forest environment,
+trees, flowers, natural sunlight, cinematic background.
+
+STYLE:
+High-quality 3D children's animation,
+cute cartoon movie style,
+bright colorful visuals,
+soft rounded characters,
+expressive faces,
+full-body characters,
+wide cinematic composition,
+beautiful detailed environment.
+
+DO NOT MAKE IT:
+photorealistic,
+a real photograph,
+a portrait,
+a close-up,
+horror,
+dark,
+realistic human.
+`;
+}
   const character = getCharacter(text);
   const background = getBackground(text);
 

@@ -10,7 +10,7 @@ generateBtn.addEventListener("click", function () {
   const prompt = promptInput.value.trim();
 
   if (prompt === "") {
-    result.innerHTML = "<p>⚠️ Pehle story ka idea likho.</p>";
+    result.textContent = "⚠️ Pehle story ka idea likho.";
     return;
   }
 
@@ -18,27 +18,21 @@ generateBtn.addEventListener("click", function () {
   const voice = voiceInput.value;
   const duration = durationInput.value;
 
-  // Story ko sentences mein divide karna
   const sentences = prompt
     .split(/[.!?।]+/)
-    .map(sentence => sentence.trim())
-    .filter(sentence => sentence.length > 0);
+    .map(text => text.trim())
+    .filter(text => text.length > 0)
+    .slice(0, 8);
 
-  // Kam se kam 3 scenes
-  let scenes = sentences.slice(0, 6);
-
-  if (scenes.length === 1) {
-    scenes = [
-      scenes[0],
-      "Character story mein aage badhta hai.",
-      "Story ka ending scene."
-    ];
+  if (sentences.length === 0) {
+    result.textContent = "⚠️ Story thodi aur detail mein likho.";
+    return;
   }
 
   result.innerHTML = "";
 
   const title = document.createElement("h2");
-  title.textContent = "🎬 Story Generated";
+  title.textContent = "🎬 Storyboard Ready";
   result.appendChild(title);
 
   const info = document.createElement("p");
@@ -47,36 +41,55 @@ generateBtn.addEventListener("click", function () {
   result.appendChild(info);
 
   const heading = document.createElement("h3");
-  heading.textContent = "🎞️ Scenes";
+  heading.textContent = "🎞️ Your Scenes";
   result.appendChild(heading);
 
-  scenes.forEach(function (sceneText, index) {
+  sentences.forEach(function (text, index) {
 
     const card = document.createElement("div");
     card.className = "scene-card";
 
-    const sceneTitle = document.createElement("h4");
-    sceneTitle.textContent = `Scene ${index + 1}`;
+    const title = document.createElement("h4");
+    title.textContent = `Scene ${index + 1}`;
 
-    const sceneTextElement = document.createElement("p");
-    sceneTextElement.textContent = sceneText;
+    const storyText = document.createElement("p");
+    storyText.textContent = `📖 ${text}`;
 
-    card.appendChild(sceneTitle);
-    card.appendChild(sceneTextElement);
+    const character = document.createElement("p");
+    character.textContent =
+      "🧍 Character: Story ke according character";
+
+    const background = document.createElement("p");
+    background.textContent =
+      "🌳 Background: Scene ke according location";
+
+    const action = document.createElement("p");
+    action.textContent =
+      "🎭 Action: Character scene mein action karega";
+
+    const voiceText = document.createElement("p");
+    voiceText.textContent =
+      `🗣️ Voice: ${text}`;
+
+    card.appendChild(title);
+    card.appendChild(storyText);
+    card.appendChild(character);
+    card.appendChild(background);
+    card.appendChild(action);
+    card.appendChild(voiceText);
 
     result.appendChild(card);
   });
 
   const voiceBtn = document.createElement("button");
   voiceBtn.textContent = "🗣️ Play Narration";
-  voiceBtn.id = "voiceBtn";
 
   result.appendChild(voiceBtn);
 
   voiceBtn.addEventListener("click", function () {
 
     if (!("speechSynthesis" in window)) {
-      alert("Voice is not supported in this browser.");
+      alert("Voice supported nahi hai.");
       return;
     }
 

@@ -5,106 +5,162 @@ const durationInput = document.getElementById("duration");
 const generateBtn = document.getElementById("generateBtn");
 const result = document.getElementById("result");
 
+
+// Character ko identify karna
 function getCharacter(text) {
   const t = text.toLowerCase();
 
-  if (t.includes("कुत्ता") || t.includes("kutta") || t.includes("dog"))
-    return "a cute small puppy";
+  if (
+    t.includes("kutta") ||
+    t.includes("dog") ||
+    t.includes("puppy") ||
+    t.includes("कुत्ता")
+  ) {
+    return "cute brown and white puppy";
+  }
 
-  if (t.includes("बच्चा") || t.includes("bachcha") || t.includes("child"))
-    return "a young child";
+  if (
+    t.includes("ladka") ||
+    t.includes("boy") ||
+    t.includes("bachcha") ||
+    t.includes("child") ||
+    t.includes("बच्चा") ||
+    t.includes("लड़का")
+  ) {
+    return "cute 8-year-old Indian boy";
+  }
 
-  if (t.includes("लड़की") || t.includes("ladki") || t.includes("girl"))
-    return "a young girl";
+  if (
+    t.includes("ladki") ||
+    t.includes("girl") ||
+    t.includes("लड़की")
+  ) {
+    return "cute young Indian girl";
+  }
 
-  if (t.includes("लड़का") || t.includes("ladka") || t.includes("boy"))
-    return "a young boy";
-
-  return "the main story character";
+  return "cute young story character";
 }
 
+
+// Background identify karna
 function getBackground(text) {
   const t = text.toLowerCase();
 
-  if (t.includes("जंगल") || t.includes("jungle") || t.includes("forest"))
-    return "a beautiful green forest";
+  if (
+    t.includes("jungle") ||
+    t.includes("forest") ||
+    t.includes("जंगल")
+  ) {
+    return "beautiful green forest with trees, flowers and a small walking path";
+  }
 
-  if (t.includes("घर") || t.includes("ghar") || t.includes("home"))
-    return "a cozy village house";
+  if (
+    t.includes("gaon") ||
+    t.includes("village") ||
+    t.includes("गांव")
+  ) {
+    return "beautiful colorful Indian village with small houses and green fields";
+  }
 
-  if (t.includes("स्कूल") || t.includes("school"))
-    return "a colorful school";
+  if (
+    t.includes("ghar") ||
+    t.includes("home") ||
+    t.includes("घर")
+  ) {
+    return "beautiful cozy village house with garden";
+  }
 
-  if (t.includes("पार्क") || t.includes("park"))
-    return "a beautiful green park";
+  if (
+    t.includes("park") ||
+    t.includes("पार्क")
+  ) {
+    return "beautiful green children's park";
+  }
 
-  return "a beautiful story environment";
+  return "beautiful colorful storybook environment";
 }
 
+
+// AI image prompt
 function createImagePrompt(text) {
 
+  let character = getCharacter(text);
+  let background = getBackground(text);
+
+  // Agar scene mein puppy hai to boy + puppy dono rakho
+  if (
+    text.toLowerCase().includes("puppy") ||
+    text.toLowerCase().includes("kutta") ||
+    text.toLowerCase().includes("dog") ||
+    text.includes("कुत्ता")
+  ) {
+    character =
+      "the same cute 8-year-old Indian boy and the same cute brown-and-white puppy";
+  }
+
   return `
-Children's 3D animated movie scene.
+A beautiful children's 3D animated movie scene.
 
-MAIN CHARACTERS:
-A cute 8-year-old Indian boy named Aarav,
-short black hair,
-big expressive brown eyes,
-yellow t-shirt with a small sun symbol,
-blue shorts,
-blue backpack,
-white shoes.
+CHARACTERS:
+The same cute 8-year-old Indian boy.
+Short black hair.
+Big expressive brown eyes.
+Yellow T-shirt with a small sun symbol.
+Blue shorts.
+Blue backpack.
+White shoes.
 
-A cute friendly brown-and-white puppy,
-floppy ears,
-small red collar.
+The same cute brown-and-white puppy.
+Floppy ears.
+Red collar.
+Friendly happy face.
 
-IMPORTANT:
-The boy and puppy must look exactly the same
-in every scene of this story.
+IMPORTANT CHARACTER CONSISTENCY:
+Keep exactly the same boy and puppy appearance,
+same clothes, same colors, same hairstyle,
+same proportions and same cartoon design in every scene.
 
-SCENE:
+SCENE ACTION:
 ${text}
 
-ENVIRONMENT:
-Beautiful colorful village and green forest environment,
-trees, flowers, natural sunlight, cinematic background.
+BACKGROUND:
+${background}
 
-STYLE:
-High-quality 3D children's animation,
-cute cartoon movie style,
-bright colorful visuals,
-soft rounded characters,
-expressive faces,
-full-body characters,
-wide cinematic composition,
-beautiful detailed environment.
+VISUAL STYLE:
+High quality 3D children's animation.
+Colorful Indian cartoon movie.
+Warm sunlight.
+Beautiful cinematic lighting.
+Detailed environment.
+Cute expressive faces.
+Full body characters.
+Wide camera shot.
+Storytelling composition.
+Bright cheerful colors.
+Professional animated movie frame.
 
-DO NOT MAKE IT:
-photorealistic,
-a real photograph,
-a portrait,
-a close-up,
-horror,
-dark,
-realistic human.
+The image must look like a frame from a
+children's animated movie.
+
+NO photorealism.
+NO realistic photograph.
+NO live action.
+NO portrait.
+NO close-up.
+NO horror.
+NO dark realistic style.
 `;
 }
-  const character = getCharacter(text);
-  const background = getBackground(text);
 
-  return `${character} in ${background}, performing this story action: ${text}. 
-Cute 3D cartoon animation style, colorful, cinematic lighting, 
-detailed environment, expressive character, consistent character design, 
-high quality animated movie scene.`;
-}
 
+// Generate story
 generateBtn.addEventListener("click", function () {
 
   const prompt = promptInput.value.trim();
 
   if (prompt === "") {
-    result.innerHTML = "<p>⚠️ Pehle story ka idea likho.</p>";
+    result.innerHTML =
+      "<p>⚠️ Pehle story ka idea likho.</p>";
     return;
   }
 
@@ -112,7 +168,7 @@ generateBtn.addEventListener("click", function () {
   const voice = voiceInput.value;
   const duration = durationInput.value;
 
-  const sentences = prompt
+  const scenes = prompt
     .split(/[.!?।]+/)
     .map(text => text.trim())
     .filter(text => text.length > 0)
@@ -125,66 +181,116 @@ generateBtn.addEventListener("click", function () {
   result.appendChild(title);
 
   const info = document.createElement("p");
+
   info.textContent =
     `🎨 ${style} • 🗣️ ${voice} • ⏱️ ${duration}`;
+
   result.appendChild(info);
 
-  sentences.forEach(function (text, index) {
+
+  scenes.forEach(function (text, index) {
 
     const card = document.createElement("div");
+
     card.className = "scene-card";
 
+
     const sceneTitle = document.createElement("h3");
-    sceneTitle.textContent = `🎞️ Scene ${index + 1}`;
 
-    const story = document.createElement("p");
-    story.textContent = `📖 ${text}`;
-
-    const character = document.createElement("p");
-    character.textContent =
-      `🧍 Character: ${getCharacter(text)}`;
-
-    const background = document.createElement("p");
-    background.textContent =
-      `🌳 Background: ${getBackground(text)}`;
-
-    const imagePrompt = document.createElement("p");
-    imagePrompt.textContent =
-      `🖼️ AI Image Prompt: ${createImagePrompt(text)}`;
-
-    const imageButton = document.createElement("button");
-    imageButton.textContent = "🖼️ Generate Scene Image";
-
-    imageButton.addEventListener("click", function () {
-
-      const encodedPrompt =
-        encodeURIComponent(createImagePrompt(text));
-
-      const imageUrl =
-        `https://image.pollinations.ai/prompt/${encodedPrompt}`;
-
-      const image = document.createElement("img");
-
-      image.src = imageUrl;
-      image.alt = "AI generated story scene";
-      image.style.width = "100%";
-      image.style.marginTop = "15px";
-      image.style.borderRadius = "12px";
-
-      card.appendChild(image);
-
-      imageButton.disabled = true;
-      imageButton.textContent = "✅ Image Generated";
-    });
+    sceneTitle.textContent =
+      `🎞️ Scene ${index + 1}`;
 
     card.appendChild(sceneTitle);
+
+
+    const story = document.createElement("p");
+
+    story.textContent =
+      `📖 Story: ${text}`;
+
     card.appendChild(story);
-    card.appendChild(character);
-    card.appendChild(background);
-    card.appendChild(imagePrompt);
+
+
+    const imageButton =
+      document.createElement("button");
+
+    imageButton.textContent =
+      "🖼️ Generate Scene Image";
+
     card.appendChild(imageButton);
 
+
+    const imagePrompt =
+      createImagePrompt(text);
+
+
+    imageButton.addEventListener(
+      "click",
+      function () {
+
+        imageButton.disabled = true;
+
+        imageButton.textContent =
+          "⏳ Generating...";
+
+
+        const encodedPrompt =
+          encodeURIComponent(imagePrompt);
+
+
+        const imageUrl =
+          `https://gen.pollinations.ai/image/${encodedPrompt}?model=flux&width=1024&height=576`;
+
+
+        const image =
+          document.createElement("img");
+
+
+        image.src = imageUrl;
+
+        image.alt =
+          "AI animated story scene";
+
+
+        image.style.width = "100%";
+
+        image.style.marginTop = "15px";
+
+        image.style.borderRadius = "15px";
+
+        image.style.display = "block";
+
+
+        image.onload = function () {
+
+          imageButton.textContent =
+            "✅ Scene Image Ready";
+
+        };
+
+
+        image.onerror = function () {
+
+          imageButton.disabled = false;
+
+          imageButton.textContent =
+            "🔄 Try Again";
+
+          alert(
+            "Image generate nahi ho paayi. Dobara try karo."
+          );
+
+        };
+
+
+        card.appendChild(image);
+
+      }
+    );
+
+
     result.appendChild(card);
+
   });
 
 });

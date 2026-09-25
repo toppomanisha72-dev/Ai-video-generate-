@@ -18,63 +18,80 @@ generateBtn.addEventListener("click", function () {
   const voice = voiceInput.value;
   const duration = durationInput.value;
 
-  result.innerHTML = `
-    <div class="story-result">
+  // Story ko sentences mein divide karna
+  const sentences = prompt
+    .split(/[.!?।]+/)
+    .map(sentence => sentence.trim())
+    .filter(sentence => sentence.length > 0);
 
-      <h2>🎬 Your Story</h2>
+  // Kam se kam 3 scenes
+  let scenes = sentences.slice(0, 6);
 
-      <p><strong>Story:</strong> ${prompt}</p>
+  if (scenes.length === 1) {
+    scenes = [
+      scenes[0],
+      "Character story mein aage badhta hai.",
+      "Story ka ending scene."
+    ];
+  }
 
-      <p><strong>Style:</strong> ${style}</p>
-      <p><strong>Voice:</strong> ${voice}</p>
-      <p><strong>Duration:</strong> ${duration}</p>
+  result.innerHTML = "";
 
-      <h3>🎞️ Scenes</h3>
+  const title = document.createElement("h2");
+  title.textContent = "🎬 Story Generated";
+  result.appendChild(title);
 
-      <div class="scene-card">
-        <h4>Scene 1</h4>
-        <p>🌳 Story ka beginning scene...</p>
-      </div>
+  const info = document.createElement("p");
+  info.textContent =
+    `🎨 ${style}  •  🗣️ ${voice}  •  ⏱️ ${duration}`;
+  result.appendChild(info);
 
-      <div class="scene-card">
-        <h4>Scene 2</h4>
-        <p>🧍 Character story mein action karega...</p>
-      </div>
+  const heading = document.createElement("h3");
+  heading.textContent = "🎞️ Scenes";
+  result.appendChild(heading);
 
-      <div class="scene-card">
-        <h4>Scene 3</h4>
-        <p>🎬 Story ka next important moment...</p>
-      </div>
+  scenes.forEach(function (sceneText, index) {
 
-      <button id="voiceBtn">
-        🗣️ Play Narration
-      </button>
+    const card = document.createElement("div");
+    card.className = "scene-card";
 
-    </div>
-  `;
+    const sceneTitle = document.createElement("h4");
+    sceneTitle.textContent = `Scene ${index + 1}`;
 
-  const voiceBtn = document.getElementById("voiceBtn");
+    const sceneTextElement = document.createElement("p");
+    sceneTextElement.textContent = sceneText;
+
+    card.appendChild(sceneTitle);
+    card.appendChild(sceneTextElement);
+
+    result.appendChild(card);
+  });
+
+  const voiceBtn = document.createElement("button");
+  voiceBtn.textContent = "🗣️ Play Narration";
+  voiceBtn.id = "voiceBtn";
+
+  result.appendChild(voiceBtn);
 
   voiceBtn.addEventListener("click", function () {
 
-    if ("speechSynthesis" in window) {
-
-      speechSynthesis.cancel();
-
-      const speech = new SpeechSynthesisUtterance(prompt);
-
-      if (voice === "Hindi") {
-        speech.lang = "hi-IN";
-      } else {
-        speech.lang = "en-US";
-      }
-
-      speech.rate = 0.9;
-      speech.pitch = 1;
-
-      speechSynthesis.speak(speech);
+    if (!("speechSynthesis" in window)) {
+      alert("Voice is not supported in this browser.");
+      return;
     }
 
+    speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(prompt);
+
+    speech.lang = voice === "Hindi"
+      ? "hi-IN"
+      : "en-US";
+
+    speech.rate = 0.9;
+    speech.pitch = 1;
+
+    speechSynthesis.speak(speech);
   });
 
 });

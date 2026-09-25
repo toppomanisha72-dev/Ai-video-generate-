@@ -236,10 +236,8 @@ generateBtn.addEventListener("click", function () {
 
         const encodedPrompt =
           encodeURIComponent(imagePrompt);
-
-
-        const imageUrl =
-          `https://gen.pollinations.ai/image/${encodedPrompt}?model=flux&width=1024&height=576`;
+const imageUrl =
+  `https://image.pollinations.ai/prompt/${encodedPrompt}?model=flux&width=1024&height=576`;
 
 
         const image =

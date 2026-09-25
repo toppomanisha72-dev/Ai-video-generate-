@@ -5,290 +5,341 @@ const durationInput = document.getElementById("duration");
 const generateBtn = document.getElementById("generateBtn");
 const result = document.getElementById("result");
 
+// Yahan apni Pollinations App Key डालना
+const CLIENT_ID = "pk_YOUR_APP_KEY";
 
-// Character ko identify karna
-function getCharacter(text) {
-  const t = text.toLowerCase();
+// Same page callback
+const REDIRECT_URI = window.location.href.split("#")[0];
 
-  if (
-    t.includes("kutta") ||
-    t.includes("dog") ||
-    t.includes("puppy") ||
-    t.includes("कुत्ता")
-  ) {
-    return "cute brown and white puppy";
+// Random security value
+function randomString(length = 32) {
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  let result = "";
+
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(
+      Math.floor(Math.random() * chars.length)
+    );
   }
 
-  if (
-    t.includes("ladka") ||
-    t.includes("boy") ||
-    t.includes("bachcha") ||
-    t.includes("child") ||
-    t.includes("बच्चा") ||
-    t.includes("लड़का")
-  ) {
-    return "cute 8-year-old Indian boy";
-  }
-
-  if (
-    t.includes("ladki") ||
-    t.includes("girl") ||
-    t.includes("लड़की")
-  ) {
-    return "cute young Indian girl";
-  }
-
-  return "cute young story character";
+  return result;
 }
 
+// SHA-256 PKCE challenge
+async function createChallenge(verifier) {
+  const data = new TextEncoder().encode(verifier);
 
-// Background identify karna
-function getBackground(text) {
-  const t = text.toLowerCase();
+  const hash = await crypto.subtle.digest(
+    "SHA-256",
+    data
+  );
 
-  if (
-    t.includes("jungle") ||
-    t.includes("forest") ||
-    t.includes("जंगल")
-  ) {
-    return "beautiful green forest with trees, flowers and a small walking path";
-  }
-
-  if (
-    t.includes("gaon") ||
-    t.includes("village") ||
-    t.includes("गांव")
-  ) {
-    return "beautiful colorful Indian village with small houses and green fields";
-  }
-
-  if (
-    t.includes("ghar") ||
-    t.includes("home") ||
-    t.includes("घर")
-  ) {
-    return "beautiful cozy village house with garden";
-  }
-
-  if (
-    t.includes("park") ||
-    t.includes("पार्क")
-  ) {
-    return "beautiful green children's park";
-  }
-
-  return "beautiful colorful storybook environment";
+  return btoa(
+    String.fromCharCode(...new Uint8Array(hash))
+  )
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
 }
 
+// AI connect
+async function connectAI() {
 
-// AI image prompt
-function createImagePrompt(text) {
-
-  let character = getCharacter(text);
-  let background = getBackground(text);
-
-  // Agar scene mein puppy hai to boy + puppy dono rakho
-  if (
-    text.toLowerCase().includes("puppy") ||
-    text.toLowerCase().includes("kutta") ||
-    text.toLowerCase().includes("dog") ||
-    text.includes("कुत्ता")
-  ) {
-    character =
-      "the same cute 8-year-old Indian boy and the same cute brown-and-white puppy";
-  }
-
-  return `
-A beautiful children's 3D animated movie scene.
-
-CHARACTERS:
-The same cute 8-year-old Indian boy.
-Short black hair.
-Big expressive brown eyes.
-Yellow T-shirt with a small sun symbol.
-Blue shorts.
-Blue backpack.
-White shoes.
-
-The same cute brown-and-white puppy.
-Floppy ears.
-Red collar.
-Friendly happy face.
-
-IMPORTANT CHARACTER CONSISTENCY:
-Keep exactly the same boy and puppy appearance,
-same clothes, same colors, same hairstyle,
-same proportions and same cartoon design in every scene.
-
-SCENE ACTION:
-${text}
-
-BACKGROUND:
-${background}
-
-VISUAL STYLE:
-High quality 3D children's animation.
-Colorful Indian cartoon movie.
-Warm sunlight.
-Beautiful cinematic lighting.
-Detailed environment.
-Cute expressive faces.
-Full body characters.
-Wide camera shot.
-Storytelling composition.
-Bright cheerful colors.
-Professional animated movie frame.
-
-The image must look like a frame from a
-children's animated movie.
-
-NO photorealism.
-NO realistic photograph.
-NO live action.
-NO portrait.
-NO close-up.
-NO horror.
-NO dark realistic style.
-`;
-}
-
-
-// Generate story
-generateBtn.addEventListener("click", function () {
-
-  const prompt = promptInput.value.trim();
-
-  if (prompt === "") {
+  if (CLIENT_ID === "pk_YOUR_APP_KEY") {
     result.innerHTML =
-      "<p>⚠️ Pehle story ka idea likho.</p>";
+      "<p>⚠️ Pehle Pollinations App Key डालो.</p>";
     return;
   }
 
-  const style = styleInput.value;
-  const voice = voiceInput.value;
-  const duration = durationInput.value;
+  const verifier = randomString(64);
 
-  const scenes = prompt
-    .split(/[.!?।]+/)
-    .map(text => text.trim())
-    .filter(text => text.length > 0)
-    .slice(0, 8);
+  const challenge =
+    await createChallenge(verifier);
 
-  result.innerHTML = "";
+  sessionStorage.setItem(
+    "pkce_verifier",
+    verifier
+  );
 
-  const title = document.createElement("h2");
-  title.textContent = "🎬 Story Ready";
-  result.appendChild(title);
+  const state = randomString(32);
 
-  const info = document.createElement("p");
+  sessionStorage.setItem(
+    "oauth_state",
+    state
+  );
 
-  info.textContent =
-    `🎨 ${style} • 🗣️ ${voice} • ⏱️ ${duration}`;
+  const params = new URLSearchParams({
+    response_type: "code",
+    client_id: CLIENT_ID,
+    redirect_uri: REDIRECT_URI,
+    scope: "usage",
+    state: state,
+    code_challenge: challenge,
+    code_challenge_method: "S256"
+  });
 
-  result.appendChild(info);
+  window.location.href =
+    "https://enter.pollinations.ai/authorize?" +
+    params.toString();
+}
 
+// Generate image
+async function generateImage(promptText) {
 
-  scenes.forEach(function (text, index) {
+  const accessToken =
+    sessionStorage.getItem("pollinations_token");
 
-    const card = document.createElement("div");
+  if (!accessToken) {
+    result.innerHTML =
+      "<p>⚠️ Pehle Connect AI दबाओ.</p>";
+    return;
+  }
 
-    card.className = "scene-card";
+  const imagePrompt = `
+Create a beautiful children's 3D animated movie frame.
 
+Keep the characters consistent.
 
-    const sceneTitle = document.createElement("h3");
+Main character:
+cute 8-year-old Indian boy,
+short black hair,
+big expressive brown eyes,
+yellow T-shirt,
+blue shorts,
+blue backpack,
+white shoes.
 
-    sceneTitle.textContent =
-      `🎞️ Scene ${index + 1}`;
+Animal:
+cute brown-and-white puppy,
+floppy ears,
+red collar,
+friendly face.
 
-    card.appendChild(sceneTitle);
+Scene:
+${promptText}
 
+Style:
+high quality 3D children's animation,
+colorful Indian environment,
+warm sunlight,
+cinematic lighting,
+wide landscape shot,
+full body characters,
+cute expressive faces,
+professional animated movie frame.
 
-    const story = document.createElement("p");
+Do not make it photorealistic.
+Do not make it a photograph.
+`;
 
-    story.textContent =
-      `📖 Story: ${text}`;
+  result.innerHTML =
+    "<p>⏳ AI image generate ho rahi hai...</p>";
 
-    card.appendChild(story);
+  try {
 
+    const response = await fetch(
+      "https://gen.pollinations.ai/v1/images/generations",
+      {
+        method: "POST",
 
-    const imageButton =
-      document.createElement("button");
+        headers: {
+          "Authorization":
+            "Bearer " + accessToken,
 
-    imageButton.textContent =
-      "🖼️ Generate Scene Image";
+          "Content-Type":
+            "application/json"
+        },
 
-    card.appendChild(imageButton);
-
-
-    const imagePrompt =
-      createImagePrompt(text);
-
-
-    imageButton.addEventListener(
-      "click",
-      function () {
-
-        imageButton.disabled = true;
-
-        imageButton.textContent =
-          "⏳ Generating...";
-
-
-        const encodedPrompt =
-          encodeURIComponent(imagePrompt);
-const imageUrl =
-  `https://image.pollinations.ai/prompt/${encodedPrompt}?model=flux&width=1024&height=576`;
-
-
-        const image =
-          document.createElement("img");
-
-
-        image.src = imageUrl;
-
-        image.alt =
-          "AI animated story scene";
-
-
-        image.style.width = "100%";
-
-        image.style.marginTop = "15px";
-
-        image.style.borderRadius = "15px";
-
-        image.style.display = "block";
-
-
-        image.onload = function () {
-
-          imageButton.textContent =
-            "✅ Scene Image Ready";
-
-        };
-
-
-        image.onerror = function () {
-
-          imageButton.disabled = false;
-
-          imageButton.textContent =
-            "🔄 Try Again";
-
-          alert(
-            "Image generate nahi ho paayi. Dobara try karo."
-          );
-
-        };
-
-
-        card.appendChild(image);
-
+        body: JSON.stringify({
+          model: "flux",
+          prompt: imagePrompt,
+          size: "1024x576"
+        })
       }
     );
 
+    if (!response.ok) {
+      throw new Error(
+        "Image API error: " +
+        response.status
+      );
+    }
 
-    result.appendChild(card);
+    const data = await response.json();
 
-  });
+    const imageData =
+      data.data &&
+      data.data[0];
 
-});
+    if (!imageData) {
+      throw new Error(
+        "Image data nahi mila."
+      );
+    }
+
+    const image =
+      document.createElement("img");
+
+    if (imageData.b64_json) {
+
+      image.src =
+        "data:image/png;base64," +
+        imageData.b64_json;
+
+    } else if (imageData.url) {
+
+      image.src =
+        imageData.url;
+
+    } else {
+
+      throw new Error(
+        "Image URL nahi mila."
+      );
+    }
+
+    image.style.width = "100%";
+    image.style.borderRadius = "15px";
+    image.style.marginTop = "15px";
+
+    result.innerHTML =
+      "<h2>🎬 Scene Ready</h2>";
+
+    result.appendChild(image);
+
+  } catch (error) {
+
+    console.error(error);
+
+    result.innerHTML =
+      "<p>❌ Image generate nahi ho paayi.</p>" +
+      "<p>AI connection check karo.</p>";
+  }
+}
+
+
+// Generate button
+generateBtn.addEventListener(
+  "click",
+  function () {
+
+    const prompt =
+      promptInput.value.trim();
+
+    if (!prompt) {
+
+      result.innerHTML =
+        "<p>⚠️ Pehle story likho.</p>";
+
+      return;
+    }
+
+    generateImage(prompt);
+  }
+);
+
+
+// OAuth callback
+async function handleCallback() {
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const code =
+    params.get("code");
+
+  const returnedState =
+    params.get("state");
+
+  if (!code) return;
+
+  const savedState =
+    sessionStorage.getItem(
+      "oauth_state"
+    );
+
+  if (
+    !savedState ||
+    returnedState !== savedState
+  ) {
+
+    result.innerHTML =
+      "<p>❌ Security check failed.</p>";
+
+    return;
+  }
+
+  const verifier =
+    sessionStorage.getItem(
+      "pkce_verifier"
+    );
+
+  try {
+
+    const response = await fetch(
+      "https://enter.pollinations.ai/api/oauth/token",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/x-www-form-urlencoded"
+        },
+
+        body: new URLSearchParams({
+          grant_type:
+            "authorization_code",
+
+          code: code,
+
+          client_id:
+            CLIENT_ID,
+
+          redirect_uri:
+            REDIRECT_URI,
+
+          code_verifier:
+            verifier
+        })
+      }
+    );
+
+    const data =
+      await response.json();
+
+    if (!data.access_token) {
+      throw new Error(
+        "Access token nahi mila."
+      );
+    }
+
+    sessionStorage.setItem(
+      "pollinations_token",
+      data.access_token
+    );
+
+    window.history.replaceState(
+      {},
+      document.title,
+      REDIRECT_URI
+    );
+
+    result.innerHTML =
+      "<p>✅ AI connected! Ab Generate Story dabao.</p>";
+
+  } catch (error) {
+
+    console.error(error);
+
+    result.innerHTML =
+      "<p>❌ AI connect nahi ho paaya.</p>";
+  }
+}
+
+
+// Page load
+handleCallback();

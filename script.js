@@ -406,3 +406,13 @@ Family-friendly children's animation.
       "<p>❌ Video generate नहीं हो पाई.</p>";
   }
 }
+generateBtn.addEventListener("click", function () {
+  const prompt = promptInput.value.trim();
+
+  if (!prompt) {
+    result.innerHTML = "<p>⚠️ पहले story लिखो.</p>";
+    return;
+  }
+
+  generateAIVideo(prompt);
+});

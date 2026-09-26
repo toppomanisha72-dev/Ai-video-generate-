@@ -10,7 +10,7 @@ const result = document.getElementById("result");
 const CLIENT_ID = "pk_f5MMvw8OryFvEdRa";
 
 // Same page callback
-const REDIRECT_URI = 
+const REDIRECT_URI = "https://toppomanisha72-dev.github.io/Ai-video generate-/";
 
 // Random security value
 function randomString(length = 32) {

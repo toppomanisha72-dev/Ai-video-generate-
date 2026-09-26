@@ -10,7 +10,7 @@ const result = document.getElementById("result");
 const CLIENT_ID = "pk_f5MMvw8OryFvEdRa";
 
 // Same page callback
-const REDIRECT_URI = window.location.href.split("#")[0];
+const REDIRECT_URI = 
 
 // Random security value
 function randomString(length = 32) {

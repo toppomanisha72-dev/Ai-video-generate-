@@ -344,3 +344,65 @@ async function handleCallback() {
 
 // Page load
 handleCallback();
+async function generateAIVideo(promptText) {
+  const token = sessionStorage.getItem("pollinations_token");
+
+  if (!token) {
+    result.innerHTML = "<p>⚠️ पहले AI Connect करना होगा.</p>";
+    return;
+  }
+
+  result.innerHTML = "<p>🎬 AI video बन रही है... थोड़ा समय लग सकता है.</p>";
+
+  const videoPrompt = `
+Create a colorful 3D animated children's story video.
+
+Story:
+${promptText}
+
+Keep the same characters throughout the video.
+Use smooth character movement and natural actions.
+Bright cinematic lighting.
+Colorful environment.
+Family-friendly children's animation.
+`;
+
+  try {
+    const url =
+      "https://gen.pollinations.ai/video/" +
+      encodeURIComponent(videoPrompt) +
+      "?model=veo&duration=4";
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: "Bearer " + token
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("Video generation failed: " + response.status);
+    }
+
+    const blob = await response.blob();
+
+    const videoURL = URL.createObjectURL(blob);
+
+    result.innerHTML = "";
+
+    const video = document.createElement("video");
+
+    video.src = videoURL;
+    video.controls = true;
+    video.autoplay = false;
+    video.style.width = "100%";
+    video.style.borderRadius = "15px";
+
+    result.appendChild(video);
+
+  } catch (error) {
+    console.error(error);
+
+    result.innerHTML =
+      "<p>❌ Video generate नहीं हो पाई.</p>";
+  }
+}

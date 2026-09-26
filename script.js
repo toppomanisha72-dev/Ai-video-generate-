@@ -1,4 +1,5 @@
 const promptInput = document.getElementById("storyPrompt");
+const videoPlayer = document.getElementById("videoPlayer");
 const styleInput = document.getElementById("style");
 const voiceInput = document.getElementById("voice");
 const durationInput = document.getElementById("duration");

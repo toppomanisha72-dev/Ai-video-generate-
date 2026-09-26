@@ -7,7 +7,7 @@ const generateBtn = document.getElementById("generateBtn");
 const result = document.getElementById("result");
 
 // Yahan apni Pollinations App Key डालना
-const CLIENT_ID = "pk_YOUR_APP_KEY";
+const CLIENT_ID = "pk_f5MMvw8OryFvEdRa";
 
 // Same page callback
 const REDIRECT_URI = window.location.href.split("#")[0];

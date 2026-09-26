@@ -416,3 +416,8 @@ generateBtn.addEventListener("click", function () {
 
   generateAIVideo(prompt);
 });
+const connectBtn = document.getElementById("connectBtn");
+
+connectBtn.addEventListener("click", function () {
+  connectAI();
+});

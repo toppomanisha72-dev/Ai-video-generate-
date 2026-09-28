@@ -236,7 +236,7 @@ generateBtn.addEventListener(
       return;
     }
 
-    generateImage(prompt);
+    generateVideo(prompt);
   }
 );
 

@@ -214,7 +214,7 @@ Do not make it a photograph.
     console.error(error);
 
     result.innerHTML =
-      "<p>❌ Image generate nahi ho paayi.</p>" +
+      "<p>❌ video error;" + error.message +"</p>";}
       "<p>AI connection check karo.</p>";
   }
 }

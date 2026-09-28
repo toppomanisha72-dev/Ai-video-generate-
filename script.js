@@ -208,17 +208,14 @@ Do not make it a photograph.
       "<h2>🎬 Scene Ready</h2>";
 
     result.appendChild(image);
+} catch (error) {
 
-  } catch (error) {
+  console.error(error);
 
-    console.error(error);
-
-    result.innerHTML =
-  "<p>❌ Video generate नहीं हो पाई: " + error.message + "</p>";
-      "<p>AI connection check karo.</p>";
-  }
+  result.innerHTML =
+    "<p>❌ Video generate नहीं हो पाई: " + error.message + "</p>" +
+    "<p>AI connection check करो.</p>";
 }
-
 
 // Generate button
 generateBtn.addEventListener(

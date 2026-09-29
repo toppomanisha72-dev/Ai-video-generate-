@@ -233,7 +233,7 @@ generateBtn.addEventListener(
       return;
     }
 
-    generateVideo(prompt);
+    generateAIVideo(prompt);
   }
 );
 

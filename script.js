@@ -221,7 +221,7 @@ Do not make it a photograph.
 generateBtn.addEventListener(
   "click",
   function () {
-
+result.innerHTML = "<p>✅ Button click ho gaya!</p>";
     const prompt =
       promptInput.value.trim();
 
